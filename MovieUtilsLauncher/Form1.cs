@@ -52,7 +52,7 @@ namespace MovieUtilsLauncher
                 Debug.WriteLine(s);
 
                 var p = new Process();
-                p.StartInfo.Arguments = s;
+                p.StartInfo.Arguments = "\"" + s + "\"";
                 
                 if (!Path.IsPathRooted(toolPath))
                 {
