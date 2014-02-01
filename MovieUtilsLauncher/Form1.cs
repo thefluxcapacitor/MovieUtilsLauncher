@@ -25,7 +25,9 @@ namespace MovieUtilsLauncher
         private void panel1_DragDrop(object sender, DragEventArgs e)
         {
             var toolPath = ConfigurationManager.AppSettings["SubsDownloaderPath"];
-            this.RunTool(toolPath, e);
+
+            var subsDownloaderAutoDownload = bool.Parse(ConfigurationManager.AppSettings["SubsDownloaderAutoDownload"]);
+            this.RunTool(toolPath, subsDownloaderAutoDownload ? "-autoDownload" : null, e);
         }
 
         private void panel1_DragEnter(object sender, DragEventArgs e)
@@ -39,10 +41,10 @@ namespace MovieUtilsLauncher
         private void panel2_DragDrop(object sender, DragEventArgs e)
         {
             var toolPath = ConfigurationManager.AppSettings["MovieInfoPath"];
-            this.RunTool(toolPath, e);
+            this.RunTool(toolPath, null, e);
         }
 
-        private void RunTool(string toolPath, DragEventArgs e)
+        private void RunTool(string toolPath, string extraArguments, DragEventArgs e)
         {
             Array a = (Array)e.Data.GetData(DataFormats.FileDrop);
 
@@ -53,7 +55,12 @@ namespace MovieUtilsLauncher
 
                 var p = new Process();
                 p.StartInfo.Arguments = "\"" + s + "\"";
-                
+
+                if (!string.IsNullOrEmpty(extraArguments))
+                {
+                    p.StartInfo.Arguments = p.StartInfo.Arguments + " " + extraArguments;
+                }
+
                 if (!Path.IsPathRooted(toolPath))
                 {
                     var currPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
@@ -68,10 +75,12 @@ namespace MovieUtilsLauncher
         private void panel3_DragDrop(object sender, DragEventArgs e)
         {
             var toolPath = ConfigurationManager.AppSettings["SubsDownloaderPath"];
-            this.RunTool(toolPath, e);
+
+            var subsDownloaderAutoDownload = bool.Parse(ConfigurationManager.AppSettings["SubsDownloaderAutoDownload"]);
+            this.RunTool(toolPath, subsDownloaderAutoDownload ? "-autoDownload" : null, e);
 
             toolPath = ConfigurationManager.AppSettings["MovieInfoPath"];
-            this.RunTool(toolPath, e);
+            this.RunTool(toolPath, null, e);
         }
     }
 }
